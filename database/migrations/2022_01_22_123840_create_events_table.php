@@ -24,7 +24,7 @@ class CreateEventsTable extends Migration
 
             // Data.
             $table->string('google_id');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->boolean('allday')->default(false);
 

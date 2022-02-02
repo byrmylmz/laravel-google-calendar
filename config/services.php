@@ -29,16 +29,17 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+
     'google' => [
         // Our Google API credentials.
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'client_id' => '289279522444-rol3v9jke2i6qmflmjfa8s9iuvprt3ol.apps.googleusercontent.com',
+        'client_secret' => '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',
         
         // The URL to redirect to after the OAuth process.
-        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+        'redirect_uri' => 'https://662d-31-145-217-231.ngrok.io/google/oauth',
         
         // The URL that listens to Google webhook notifications (Part 3).
-        'webhook_uri' => env('GOOGLE_WEBHOOK_URI'),
+        'webhook_uri' => 'https://662d-31-145-217-231.ngrok.io/google/webhook',
         
         // Let the user know what we will be using from his Google account.
         'scopes' => [

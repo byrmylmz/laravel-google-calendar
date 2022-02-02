@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Services\Google;
+use App\Models\GoogleAccount;
+
+
 
 
 use Illuminate\Http\Request;
@@ -25,27 +28,37 @@ class GoogleAccountController extends Controller
         if (! $request->has('code')) {
             return redirect($google->createAuthUrl());
         }
-
+       
         $google->authenticate($request->get('code'));
-        $account = $google->service('Plus')->people->get('me');
+
+        $account = $google->service('Oauth2');
+        $userInfo = $account->userinfo->get();
+
+        //$infoArray=json_encode($userInfo);
+        /**///return $userInfo->email;
+        //return $infoArray->email;
+        //print_r($userInfo);
 
         auth()->user()->googleAccounts()->updateOrCreate(
             [
-                'google_id' => $account->id,
+                'google_id' => $userInfo->id,
             ],
             [
-                'name' => head($account->emails)->value,
+                'name' =>$userInfo->email,
                 'token' => $google->getAccessToken(),
             ]
         );
 
         return redirect()->route('google.index');
+        
     }
 
     public function destroy(GoogleAccount $googleAccount)
     {
-        // TODO:
-        // - Revoke the authentication token.
-        // - Delete the Google Account.
+        $googleAccount->delete();
+        // Event though it has been deleted from our database,
+         // we still have access to $googleAccount as an object in memory.
+       $google->revokeToken($googleAccount->token);
+       return redirect()->back();
     }
 }

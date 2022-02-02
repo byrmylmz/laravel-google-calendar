@@ -40,4 +40,14 @@ class Google
 
         return call_user_func_array([$this->client, $method], $args);
     }
+
+    public function revokeToken($token = null)
+    {
+        $token = $token ?? $this->client->getAccessToken();
+
+        return $this->client->revokeToken($token);
+    }
+    
+
+    
 }

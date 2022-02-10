@@ -36,10 +36,10 @@ return [
         'client_secret' => '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',
         
         // The URL to redirect to after the OAuth process.
-        'redirect_uri' => 'https://662d-31-145-217-231.ngrok.io/google/oauth',
+        'redirect_uri' => 'https://9436-31-145-217-231.ngrok.io/google/oauth',
         
         // The URL that listens to Google webhook notifications (Part 3).
-        'webhook_uri' => 'https://662d-31-145-217-231.ngrok.io/google/webhook',
+        'webhook_uri' => 'https://9436-31-145-217-231.ngrok.io/google/webhook',
         
         // Let the user know what we will be using from his Google account.
         'scopes' => [

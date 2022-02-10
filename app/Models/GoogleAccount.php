@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Calendar;
-use App\Jobs\SynchronizeGoogleCalendars;
-use App\Models\User;
 
+use App\Models\Calendar;
+use App\Concerns\Synchronizable;
+use App\Jobs\SynchronizeGoogleCalendars;
+use App\Jobs\WatchGoogleCalendars;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+
 
 class GoogleAccount extends Model
 {
+    use Synchronizable;
+
     protected $fillable = [
         'google_id', 'name', 'token',
     ];
@@ -28,12 +33,13 @@ class GoogleAccount extends Model
         return $this->hasMany(Calendar::class);
     }
 
-    public static function boot()
+    public function synchronize()
     {
-        parent::boot();
+        SynchronizeGoogleCalendars::dispatch($this);
+    }
 
-        static::created(function ($googleAccount) {
-            SynchronizeGoogleCalendars::dispatch($googleAccount);
-        });
+    public function watch()
+    {
+        WatchGoogleCalendars::dispatch($this);
     }
 }

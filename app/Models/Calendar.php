@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Concerns\Synchronizable;
 use App\Models\Event;
 use App\Models\GoogleAccount;
 use App\Jobs\SynchronizeGoogleEvents;
+use App\Jobs\WatchGoogleEvents;
 use Illuminate\Database\Eloquent\Model;
 
 class Calendar extends Model
 {
+    use Synchronizable;
+
     protected $fillable = [
         'google_id', 'name', 'color', 'timezone',
     ];
@@ -23,12 +27,13 @@ class Calendar extends Model
         return $this->hasMany(Event::class);
     }
 
-    public static function boot()
+    public function synchronize()
     {
-        parent::boot();
+        SynchronizeGoogleEvents::dispatch($this);
+    }
 
-        static::created(function ($calendar) {
-            SynchronizeGoogleEvents::dispatch($calendar);
-        });
+    public function watch()
+    {
+        WatchGoogleEvents::dispatch($this);
     }
 }

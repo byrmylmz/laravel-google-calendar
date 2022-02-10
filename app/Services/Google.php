@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Calendar;
+use App\Models\GoogleAccount;
+
 class Google
 {
     protected $client;
@@ -18,11 +21,40 @@ class Google
         $client->setIncludeGrantedScopes(config('services.google.include_granted_scopes'));
         $this->client = $client;
     }
+
     public function connectUsing($token)
     {
         $this->client->setAccessToken($token);
 
         return $this;
+    }
+
+    public function connectWithSynchronizable($synchronizable)
+    {
+        $token = $this->getTokenFromSynchronizable($synchronizable);
+        
+        return $this->connectUsing($token);
+    }
+
+    protected function getTokenFromSynchronizable($synchronizable)
+    {
+        switch (true) {
+            case $synchronizable instanceof GoogleAccount:
+                return $synchronizable->token;
+
+            case $synchronizable instanceof Calendar:
+                return $synchronizable->googleAccount->token;
+            
+            default:
+                throw new \Exception("Invalid Synchronizable");
+        }
+    }
+
+    public function revokeToken($token = null)
+    {
+        $token = $token ?? $this->client->getAccessToken();
+
+        return $this->client->revokeToken($token);
     }
 
     public function service($service)
@@ -40,14 +72,4 @@ class Google
 
         return call_user_func_array([$this->client, $method], $args);
     }
-
-    public function revokeToken($token = null)
-    {
-        $token = $token ?? $this->client->getAccessToken();
-
-        return $this->client->revokeToken($token);
-    }
-    
-
-    
 }

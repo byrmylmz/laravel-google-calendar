@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Calendar;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    use HasFactory;
     protected $with = ['calendar'];
-    protected $fillable = ['google_id', 'name', 'description', 'allday', 'started_at', 'ended_at'];
+
+    protected $fillable = [
+        'google_id', 'name', 'description', 'allday', 'started_at', 'ended_at',
+    ];
 
     public function calendar()
     {
